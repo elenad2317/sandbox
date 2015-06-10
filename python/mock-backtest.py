@@ -67,6 +67,19 @@ df = pd.DataFrame(Matrix,  columns = ('Organization', 'Campaign', 'Strategy', 'R
 
 #############################################################################
 
+import json
+def makejson(df, filename): 
+    end_dict = {'status': {"code":"success"}}
+    for index, row in df.iterrows(): 
+        user_row = []
+        for col in df.columns: 
+            user_row.append(str(col) + ": " + str(row[col]))
+        end_dict['data']= {" 1 ": user_row}
+        break 
+    f = open(filename, 'w')
+    json.dump(end_dict,f)
+    return None 
+
 def main(df):
     opts, args = getopt.getopt(sys.argv[1:], 'h', ['sort-by', 'format'])
     for i in range(len(opts)): 
@@ -84,10 +97,12 @@ def main(df):
     elif form == "excel":
         result.to_excel('output.xlsx')
     elif form == "json":
-        result.to_json('output.txt')
+        makejson(df, 'output.txt')
       
     return None 
 
 
 if __name__ == "__main__":
     main(df)
+
+
