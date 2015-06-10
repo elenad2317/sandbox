@@ -69,16 +69,14 @@ df = pd.DataFrame(Matrix,  columns = ('Organization', 'Campaign', 'Strategy', 'R
 
 import json
 def makejson(df, filename): 
-    end_dict = {'status': {"code":"success"}}
+    end_dict = {'status': {"code":"success"}, 'data': []}
     for index, row in df.iterrows(): 
-        user_row = []
-        for col in df.columns: 
-            user_row.append(str(col) + ": " + str(row[col]))
-        end_dict['data']= {" 1 ": user_row}
-        break 
+        user_row = {str(col) : row[col] for col in df.columns}
+        #user_row should be js object 
+        end_dict['data'].append( user_row)
+    
     f = open(filename, 'w')
     json.dump(end_dict,f)
-    return None 
 
 def main(df):
     opts, args = getopt.getopt(sys.argv[1:], 'h', ['sort-by', 'format'])
