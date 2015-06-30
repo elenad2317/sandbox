@@ -113,6 +113,23 @@ class HyperLogLog(object):
 
         self.M[j] = max(self.M[j], get_rho(w, 64 - self.p))
 
+    def intersection(self, hll):
+        """ Gets cardinality of self intersect hll """
+        l1 = int(math.ceil(self.card()))
+        l2 = int(math.ceil(hll.card())) 
+        ul3 = [max(*items) for items in zip(*([ hll.M ] + [ self.M ]))]
+        V = ul3.count(0)
+        if V > 0:
+            H = len(ul3) * math.log(len(ul3) / float(V))
+            if H <= get_treshold(self.p):
+                l3 = H
+            else: 
+                l3 = self._Ep()
+        else:
+            l3=  self._Ep()
+            
+        return l1 + l2 - l3
+
     def update(self, *others):
         """
         Merge other counters
@@ -153,4 +170,7 @@ class HyperLogLog(object):
             return H if H <= get_treshold(self.p) else self._Ep()
         else:
             return self._Ep()
+
+
+
 

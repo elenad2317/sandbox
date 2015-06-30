@@ -1,0 +1,5 @@
+import hyperloglog 
+
+h1 = hyperloglog.HyperLogLog(.1)
+h1.add(1)
+print len(h1)
